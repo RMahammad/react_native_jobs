@@ -21,6 +21,8 @@ import {
   Specifics,
 } from "../../components";
 
+const tabs = ["About", "Qualifications", "Responsibilities"];
+
 const JobDetails = () => {
   const params = useSearchParams();
   const router = useRouter();
@@ -30,8 +32,30 @@ const JobDetails = () => {
   });
 
   const [refreshing, setRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState(tabs[0]);
 
   const onRefresh = () => {};
+
+  const displayTabContent = () => {
+    switch (activeTab) {
+      case "Qualifications":
+        return (
+          <Specifics
+            title="Qualifications"
+            points={data[0].job_highlights?.qualification ?? ["N/A"]}
+          />
+        );
+      case "About":
+        break;
+      case "Responsibilities":
+        return (
+          <Specifics
+            title="Responsibilities"
+            points={data[0].job_highlights?.responsibilities ?? ["N/A"]}
+          />
+        );
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>
@@ -70,12 +94,18 @@ const JobDetails = () => {
           ) : (
             <View style={{ padding: SIZES.medium, paddingBottom: 100 }}>
               <Company
-                compaynLogo={data[0].employes_logo}
+                companyLogo={data[0].employer_logo}
                 jobTitle={data[0].job_title}
-                companyName={data[0].employes_name}
+                companyName={data[0].employer_name}
                 location={data[0].job_country}
               />
-              <JobTabs />
+              <JobTabs
+                tabs={tabs}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
+
+              {displayTabContent()}
             </View>
           )}
         </ScrollView>
